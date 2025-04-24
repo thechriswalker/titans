@@ -1,4 +1,6 @@
-![Titans Logo](static/titans.svg)
+<div style="margin:auto;max-width:640px">
+    ![Titans Logo](static/titans.svg)
+</div>
 
 # Tiverton Titans
 
