@@ -11,13 +11,10 @@
 	let running = $state(false);
 	let startTime = $state(0);
 	let dt = $state(0);
-	let total = 60_000;
 
-	if (browser) {
-		if (page.url.searchParams.get('debug') !== null) {
-			total = 10_000;
-		}
-	}
+	let debug = browser && page.url.searchParams.get('debug') !== null;
+
+	let total = debug ? 10_000 : 60_000;
 
 	let style = $state(true);
 
@@ -40,6 +37,8 @@
 			requestAnimationFrame(tick);
 		} else {
 			await releaseWakeLock();
+			style = true;
+			dt = 0;
 		}
 	}
 
