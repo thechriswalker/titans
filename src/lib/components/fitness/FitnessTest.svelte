@@ -7,6 +7,8 @@
 	import Timer from '../timer/Timer.svelte';
 	import emblaCarouselSvelte from 'embla-carousel-svelte';
 	import HomeLinkLogo from '../logo/HomeLinkLogo.svelte';
+	import { onDestroy } from 'svelte';
+	import { acquireWakeLock, releaseWakeLock } from '$lib/util/wakelock';
 
 	const DEBUG = page.url.searchParams.get('debug') !== null;
 
@@ -20,22 +22,10 @@
 	 *
 	 *  We will have a 3 second countdown to the start
 	 */
-	async function maybeWakeLock() {
-		if ('wakeLock' in navigator) {
-			try {
-				const lock = await navigator.wakeLock.request('screen');
-				return async () => {
-					await lock.release().catch((e) => console.error('failed to release wakelock', e));
-				};
-			} catch (e) {
-				// don't fail though...
-				console.error('Failed to acquire wake lock', e);
-			}
-		}
-		return async () => {
-			// no-op
-		};
-	}
+
+	onDestroy(async () => {
+		await releaseWakeLock();
+	});
 
 	interface Props {
 		test: Array<TestSection>;
@@ -76,11 +66,10 @@
 
 	// state of the test.
 	let currentSectionIndex = $state(-1);
-	let currentSection = $derived(sections[currentSectionIndex]);
 	let testStart = $state(0); // ISO milliseconds (0 means not started)
 	let currentTime = $state(0); // will be current time.
 	let dt = $derived(currentTime - testStart); // time since test started.
-	let scores = $state<Array<number>>(test.map((x) => 0));
+	// let scores = $state<Array<number>>(test.map((x) => 0));
 
 	type TestState = 'ready' | 'countdown' | 'running' | 'finished';
 	let testState: TestState = $state('ready');
@@ -115,7 +104,7 @@
 
 	async function run() {
 		// first get the wakelock
-		const release = await maybeWakeLock();
+		await acquireWakeLock();
 		testState = 'countdown';
 		await runCountdown();
 		testStart = Date.now();
@@ -151,7 +140,7 @@
 			tick();
 			await complete.promise;
 		} finally {
-			await release();
+			await releaseWakeLock();
 		}
 	}
 

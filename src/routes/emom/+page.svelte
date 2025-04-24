@@ -1,29 +1,46 @@
 <script lang="ts">
 	import HomeLinkLogo from '$lib/components/logo/HomeLinkLogo.svelte';
 	import Timer from '$lib/components/timer/Timer.svelte';
+	import { beep, initAudioContext, isMuted } from '$lib/util/beeper.svelte';
+	import type { Deferral } from '$lib/util/deferred';
+	import { acquireWakeLock, releaseWakeLock } from '$lib/util/wakelock';
+	import { onDestroy } from 'svelte';
 
 	let running = $state(false);
 	let startTime = $state(0);
 	let dt = $state(0);
-	let total = 60_000;
+	let total = 10_000;
 
 	let style = $state(true);
 
-	function tick() {
+	let muted = isMuted();
+
+	let unmounted = false;
+	onDestroy(() => {
+		unmounted = true;
+	});
+
+	async function tick() {
 		const next = (Date.now() - startTime) % total;
 		if (next < dt) {
 			style = !style;
+			beep();
 			flash();
 		}
 		dt = next;
-		if (running) {
+		if (running && !unmounted) {
 			requestAnimationFrame(tick);
+		} else {
+			await releaseWakeLock();
 		}
 	}
 
-	function start() {
+	async function start() {
+		await initAudioContext();
+		await acquireWakeLock();
 		running = true;
 		startTime = Date.now();
+		dt = 0;
 		tick();
 	}
 
