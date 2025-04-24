@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
 	import HomeLinkLogo from '$lib/components/logo/HomeLinkLogo.svelte';
 	import Timer from '$lib/components/timer/Timer.svelte';
 	import { beep, initAudioContext, isMuted } from '$lib/util/beeper.svelte';
@@ -9,7 +11,13 @@
 	let running = $state(false);
 	let startTime = $state(0);
 	let dt = $state(0);
-	let total = 10_000;
+	let total = 60_000;
+
+	if (browser) {
+		if (page.url.searchParams.get('debug') !== null) {
+			total = 10_000;
+		}
+	}
 
 	let style = $state(true);
 
