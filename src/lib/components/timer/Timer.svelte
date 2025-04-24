@@ -77,7 +77,7 @@
 		{meterStroke}
 		{trackStroke}
 		meterTransition={'transition-[--percent] duration-0'}
-		classes="aspect-square"
+		classes="aspect-square absolute"
 	>
 		<div class="flex h-full flex-col items-center justify-center gap-2">
 			{@render children?.()}

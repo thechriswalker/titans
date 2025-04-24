@@ -78,7 +78,7 @@
 	</header>
 
 	<h2 class="h2 my-4 p-4">Why</h2>
-	<div class="card preset-outlined-secondary-500">
+	<div class="card preset-outlined-secondary-500 p-4">
 		<Accordion multiple defaultValue={value}>
 			{#snippet iconOpen()}<Minus size={24} class="text-secondary-500" />{/snippet}
 			{#snippet iconClosed()}<Plus size={24} class="text-secondary-500" />{/snippet}
@@ -107,7 +107,7 @@
 	</div>
 
 	<h2 class="h2 my-4 p-4">What</h2>
-	<div class="card preset-outlined-secondary-500">
+	<div class="card preset-outlined-secondary-500 p-4">
 		<Accordion multiple defaultValue={['0']}>
 			{#snippet iconOpen()}<Minus size={24} class="text-secondary-500" />{/snippet}
 			{#snippet iconClosed()}<Plus size={24} class="text-secondary-500" />{/snippet}
