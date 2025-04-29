@@ -216,7 +216,12 @@
 		</div>
 	</div>
 {/snippet}
-<section class="relative z-100 m-4 mx-auto flex max-w-320 flex-col">
+<section
+	class="preset-glass-neutral relative z-100 mx-auto flex max-w-360 flex-col justify-between px-16 py-4 {testState ===
+	'running'
+		? ''
+		: 'items-center'}"
+>
 	<div class="align-center flex flex-col items-center justify-between md:flex-row">
 		<h1 class="h3 sm:h2 md:h1 flex flex-row items-center">
 			<HomeLinkLogo /> Titans Fitness Test
@@ -250,14 +255,14 @@
 	<!-- then the "current" one will have full opacity, all transitioned -->
 	<div class="m-auto mt-8 flex h-full w-full flex-col items-center justify-center p-4">
 		<div
-			class="card bg-primary-700 text-secondary-500 flex min-h-64 w-full flex-row items-center justify-center gap-2 p-4 lg:mx-auto lg:max-w-340"
+			class="card bg-primary-700 text-secondary-500 flex min-h-64 w-full flex-row items-center justify-center gap-3 p-4 lg:mx-auto lg:max-w-340"
 		>
 			<h1 class="h1 text-8xl">{countdown}</h1>
 		</div>
 	</div>
 {:else if testState === 'running'}
 	<div
-		class="embla relative z-10"
+		class="embla relative z-10 -mt-2"
 		use:emblaCarouselSvelte={{ options: { axis: 'y', align: 'start' } } as any}
 		onemblaInit={emblaInit}
 	>
@@ -268,11 +273,15 @@
 						? 'scale-100 opacity-100'
 						: i > currentSectionIndex
 							? 'scale-80 opacity-50'
-							: 'scale-10 opacity-0'}"
+							: 'scale-100 opacity-100 '}"
 				>
 					{@render testSection(s)}
 				</div>
 			{/each}
+			<div class="embla__slide transition-all">
+				<!-- empty spacer-->
+				<div class="h-screen w-full"></div>
+			</div>
 		</div>
 	</div>
 {:else if testState === 'finished'}
@@ -289,8 +298,13 @@
 <style>
 	.embla {
 		overflow: visible;
-		margin: auto;
 		width: 100vw;
 		/* pointer-events: none; */
+	}
+	/* Create a custom preset in your global stylesheet */
+	.preset-glass-neutral {
+		background: color-mix(in oklab, var(--color-surface-950) 60%, transparent);
+		box-shadow: 0 0px 30px color-mix(in oklab, var(--color-surface-950) 30%, transparent) inset;
+		backdrop-filter: blur(16px);
 	}
 </style>

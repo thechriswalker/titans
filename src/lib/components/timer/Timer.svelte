@@ -68,20 +68,22 @@
 	// if we just mounted this, start at 0
 </script>
 
-<div class="mx-auto my-2 aspect-square {sizeClasses} {classes}">
+<div class="m-auto aspect-square {sizeClasses} {classes}">
 	<ProgressRing
 		value={active ? pos : 0}
 		max={total}
-		childrenClasses="{sizeClasses} {childText} {childClasses}"
+		childrenClasses="w-full h-full {childText} {childClasses}"
 		strokeLinecap={'butt'}
 		{meterStroke}
 		{trackStroke}
 		meterTransition={'transition-[--percent] duration-0'}
 		classes="aspect-square absolute"
 	>
-		<div class="flex h-full flex-col items-center justify-center gap-2">
-			{@render children?.()}
-			<TimeDisplay secs={rem} />
+		<div class="@container z-100 flex h-full w-full flex-col items-center justify-center gap-2">
+			<div class="text-[15cqw]">
+				{@render children?.()}
+			</div>
+			<TimeDisplay secs={rem} class="text-[15cqw]" />
 		</div>
 	</ProgressRing>
 </div>
